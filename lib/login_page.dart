@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
-// import 'package:login_signup/components/common/custom_input_field.dart';
+import 'package:project_youssef/signup_page.dart';
+import 'package:project_youssef/upload_page.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:project_youssef/common/page_header.dart';
+import 'package:project_youssef/common/page_heading.dart';
+import 'package:project_youssef/forget-password-page.dart';
+import 'package:project_youssef/common/custom_form_button.dart';
+import 'package:project_youssef/common/custom_input_field.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+// import 'package:email_validator/email_validator.dart';
+// import 'package:login_signup/components/signup_page.dart';
 // import 'package:login_signup/components/common/page_header.dart';
+// import 'package:login_signup/components/common/page_heading.dart';
 // import 'package:login_signup/components/forget_password_page.dart';
 // import 'package:login_signup/components/signup_page.dart';
 // import 'package:email_validator/email_validator.dart';
 // import 'package:login_signup/components/common/page_heading.dart';
 // import 'package:login_signup/components/common/custom_form_button.dart';
-
-import 'package:project_youssef/common/custom_form_button.dart';
-import 'package:project_youssef/common/custom_input_field.dart';
-import 'package:project_youssef/common/page_header.dart';
-import 'package:project_youssef/common/page_heading.dart';
-import 'package:project_youssef/forget-password-page.dart';
-import 'package:project_youssef/signup_page.dart';
-import 'package:project_youssef/upload_page.dart';
+// import 'package:login_signup/components/common/custom_input_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -23,8 +27,31 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  //
   final _loginFormKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<bool> signIn() async {
+    try {
+      final response = await Supabase.instance.client.auth.signInWithPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
+      if (response.user != null) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const UploadPage()));
+        print("Login successful: ${response.user?.email}");
+        return true;
+      } else {
+        print("Login failed: No user returned.");
+        return false;
+      }
+    } catch (error) {
+      print("Login failed: $error");
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,21 +80,23 @@ class _LoginPageState extends State<LoginPage> {
                           title: 'Log-in',
                         ),
                         CustomInputField(
+                            controller: _emailController,
                             labelText: 'Email',
                             hintText: 'Your email id',
                             validator: (textValue) {
                               if (textValue == null || textValue.isEmpty) {
                                 return 'Email is required!';
                               }
-                              // if(!EmailValidator.validate(textValue)) {
-                              //   return 'Please enter a valid email';
-                              // }
+                              if (!EmailValidator.validate(textValue)) {
+                                return 'Please enter a valid email';
+                              }
                               return null;
                             }),
                         const SizedBox(
                           height: 16,
                         ),
                         CustomInputField(
+                          controller: _passwordController,
                           labelText: 'Password',
                           hintText: 'Your password',
                           obscureText: true,
@@ -160,10 +189,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _handleLoginUser() {
-    // login user
     if (_loginFormKey.currentState!.validate()) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const UploadPage()));
+      signIn();
+      // Navigator.push(
+      //     context, MaterialPageRoute(builder: (context) => const UploadPage()));
       // ScaffoldMessenger.of(context).showSnackBar(
       //   const SnackBar(content: Text('Submitting data..')),
       // );

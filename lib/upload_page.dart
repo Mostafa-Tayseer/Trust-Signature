@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UploadPage extends StatefulWidget {
@@ -11,156 +10,177 @@ class UploadPage extends StatefulWidget {
 }
 
 class _UploadPageState extends State<UploadPage> {
+  
+  
+
+
   File? _image1;
   File? _image2;
   final ImagePicker _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
+  final Color lightGrey = Color(0xFFBDBDBD);
+  final Color accentBlue = Color.fromARGB(255, 35, 106, 172);
+  // final Color accentBlue = Color.fromARGB(255, 219, 122, 31);
+  final Color darkGrey = Color.fromARGB(255, 128, 127, 127);
+  final Color mintGreen = Color(0xFF4DB6AC);
+  final Color vibrantOrange = Color(0xFFFFA726);
+    final Color teal = Color.fromARGB(255, 35, 129, 172);
+  // final Color darkGrey = Color(0xFF616161);
+  // final Color mintGreen = Color(0xFF4DB6AC);
+  // final Color vibrantOrange = Color(0xFFFFA726);
+  // final Color teal = Colors.teal;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Check Signature"),
         centerTitle: true,
-        backgroundColor: Colors.teal,
+        // backgroundColor: mintGreen,
+        backgroundColor: teal,
       ),
       body: Container(
-        color: Colors.amber,
+        decoration: BoxDecoration(
+          color: lightGrey,
+        ),
         child: Column(
           children: [
             Expanded(
               child: Row(
                 children: [
-                  //     Expanded(
-                  //   child: Container(
-                  //     height: double.infinity,
-                  //     child: Icon(Icons.add),
-                  //     color: Colors.green,
-                  //   ),
-                  // ),
+                  // Image 1 Section
                   Expanded(
                     child: Container(
                       height: double.infinity,
+                      padding: EdgeInsets.all(8),
+                      margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: accentBlue,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text("Image 1\n"),
                             Container(
+                              width: 180,
+                              height: 180,
+                              decoration: BoxDecoration(
+                                color: darkGrey,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
                               padding: EdgeInsets.all(4.0),
-                              width: 200,
-                              height: 200,
-                              color: Colors.purple,
                               child: _image1 != null
-                                  ? Image.file(_image1!, fit: BoxFit.cover)
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Image.file(
+                                        _image1!,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
                                   : Icon(Icons.add,
                                       size: 50, color: Colors.white),
                             ),
+                            SizedBox(height: 12),
                             ElevatedButton(
                               onPressed: () {
-                                pickImage(ImageSource.gallery,
-                                    1); // للمعرض والصورة الأولى
+                                pickImage(ImageSource.gallery, 1);
                               },
-                              child: Text("Gallary"),
+                              child: Text("Gallery"),
                             ),
+                            SizedBox(height: 8),
                             ElevatedButton(
                               onPressed: () {
-                                pickImage(ImageSource.camera,
-                                    1); // للكاميرا والصورة الأولى
+                                pickImage(ImageSource.camera, 1);
                               },
                               child: Text("Camera"),
                             ),
-                            Text("\nImage Uploaded\n    successfuly"),
+                            SizedBox(height: 16),
+                            Text("\nImage Uploaded\n    Successfully"),
                           ],
                         ),
                       ),
-                      color: Colors.greenAccent,
                     ),
                   ),
+                  // Image 2 Section
                   Expanded(
                     child: Container(
                       height: double.infinity,
+                      padding: EdgeInsets.all(8),
+                      margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: accentBlue,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text("Image 2\n"),
                             Container(
-                              padding: EdgeInsets.all(4.0),
                               width: 200,
-                              height: 200,
-                              color: Colors.brown,
+                              height: 180,
+                              decoration: BoxDecoration(
+                                color: darkGrey,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              padding: EdgeInsets.all(4.0),
                               child: _image2 != null
-                                  ? Image.file(_image2!, fit: BoxFit.cover)
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Image.file(
+                                        _image2!,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
                                   : Icon(Icons.add,
                                       size: 50, color: Colors.white),
                             ),
+                            SizedBox(height: 12),
                             ElevatedButton(
                               onPressed: () {
-                                pickImage(ImageSource.gallery,
-                                    2); // للمعرض والصورة التانية
+                                pickImage(ImageSource.gallery, 2);
                               },
-                              child: Text("Gallary"),
+                              child: Text("Gallery"),
                             ),
+                            SizedBox(height: 8),
                             ElevatedButton(
                               onPressed: () {
-                                pickImage(ImageSource.camera,
-                                    2); // للكاميرا والصورة التانية
+                                pickImage(ImageSource.camera, 2);
                               },
                               child: Text("Camera"),
                             ),
-                            Text("\nWiating For image \n"),
+                            SizedBox(height: 16),
+                            Text("\nWaiting For image \n"),
                           ],
                         ),
                       ),
-                      color: Colors.pink,
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 5),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {},
                 child: Text("Output place As Text"),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: accentBlue,
                   foregroundColor: Colors.white,
                 ),
               ),
             ),
-            // Container(
-            //   alignment: Alignment(0.0, 0.0),
-            //   height: 40,
-            //   width: double.infinity,
-            //   color: Colors.red,
-            //   child: ElevatedButton(onPressed: (){}, child: Text("Check")),
-            // ),
-            SizedBox(
-              height: 10,
-            ),
-            //   Container(
-            //     alignment: Alignment.center,
-            //     height: 40,
-            //     width: double.infinity,
-            //     color: Colors.red,
-            //     child: ElevatedButton(
-            //       onPressed: (){},
-            //        child: Text("Check"),
-            //        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(
-            // Colors.yellow,),),
-            //   ),
-            //   ),
+            SizedBox(height: 10),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {},
-                child: Text("check signature"),
+                child: Text("Check Signature"),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
+                  backgroundColor: accentBlue,
                   foregroundColor: Colors.white,
                 ),
               ),
